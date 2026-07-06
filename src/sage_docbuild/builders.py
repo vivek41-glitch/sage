@@ -84,6 +84,7 @@ from typing import Literal
 from . import build_options
 from .build_options import BuildOptions
 from .utils import build_many as _build_many
+from sage.env import DOT_SAGE
 
 logger = logging.getLogger(__name__)
 
@@ -1028,18 +1029,26 @@ class SingleFileBuilder(DocBuilder):
     command line option "-o DIR", or in ``DOT_SAGE/docbuild/foo/``
     otherwise.
     """
-    def __init__(self, path):
+    def __init__(self, path, options=None):
         """
         INPUT:
 
         - ``path`` -- the path to the file for which documentation
           should be built
+        - ``options`` -- BuildOptions instance (optional)
         """
+        # Initialize parent to get _options
+        if options is None:
+            from .build_options import BuildOptions
+            options = BuildOptions()
+        super().__init__(options, path)
+        
+        # Keep ALL the existing code below exactly as it was
         self.lang = 'en'
         self.name = 'single_file'
         path = os.path.abspath(path)
 
-        # Create docbuild and relevant subdirectories, e.g.,
+        # Create docbuild and relevant subdirectories...e.g.,
         # the static and templates directories in the output directory.
         # By default, this is DOT_SAGE/docbuild/MODULE_NAME, but can
         # also be specified at the command line.
@@ -1160,7 +1169,7 @@ def get_builder(name: str, options: BuildOptions) -> DocBuilder | ReferenceBuild
         path = name[5:]
         if path.endswith('.sage') or path.endswith('.pyx'):
             raise NotImplementedError('Building documentation for a single file only works for Python files.')
-        return SingleFileBuilder(path)
+        return SingleFileBuilder(path, options)
     if Path(name) in get_all_documents(options.source_dir):
         return DocBuilder(name, options)
     print("'%s' is not a recognized document. Type 'sage --docbuild -D' for a list" % name)
