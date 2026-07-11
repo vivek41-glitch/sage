@@ -1028,7 +1028,17 @@ class SingleFileBuilder(DocBuilder):
     documentation is built in ``DIR/foo/`` if the user passes the
     command line option "-o DIR", or in ``DOT_SAGE/docbuild/foo/``
     otherwise.
+
+    TESTS::
+
+        sage: from sage_docbuild.builders import SingleFileBuilder
+        sage: from sage_docbuild.build_options import BuildOptions
+        sage: options = BuildOptions()
+        sage: builder = SingleFileBuilder("test.py", options)
+        sage: hasattr(builder, "_options")
+        True
     """
+
     def __init__(self, path, options=None):
         """
         INPUT:
