@@ -84,7 +84,6 @@ from typing import Literal
 from . import build_options
 from .build_options import BuildOptions
 from .utils import build_many as _build_many
-from sage.env import DOT_SAGE
 
 logger = logging.getLogger(__name__)
 
@@ -1033,27 +1032,27 @@ class SingleFileBuilder(DocBuilder):
 
         sage: from sage_docbuild.builders import SingleFileBuilder
         sage: from sage_docbuild.build_options import BuildOptions
-        sage: options = BuildOptions()
-        sage: builder = SingleFileBuilder("test.py", options)
-        sage: hasattr(builder, "_options")
+        sage: from pathlib import Path
+        sage: import tempfile
+        sage: with tempfile.TemporaryDirectory() as directory:
+        ....:     options = BuildOptions(output_dir=Path(directory))
+        ....:     builder = SingleFileBuilder("test.py", options)
+        ....:     builder._options is options
         True
     """
 
-    def __init__(self, path, options=None):
+    def __init__(self, path, options):
         """
         INPUT:
 
         - ``path`` -- the path to the file for which documentation
           should be built
-        - ``options`` -- BuildOptions instance (optional)
+        - ``options`` -- BuildOptions instance
         """
-        # Initialize parent to get _options
-        if options is None:
-            from .build_options import BuildOptions
-            options = BuildOptions()
-        super().__init__(options, path)
+        from sage.env import DOT_SAGE
+
+        self._options = options
         
-        # Keep ALL the existing code below exactly as it was
         self.lang = 'en'
         self.name = 'single_file'
         path = os.path.abspath(path)
