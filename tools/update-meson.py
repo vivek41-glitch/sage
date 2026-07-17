@@ -347,11 +347,23 @@ def apply_changes(self: Rewriter):
         elif i["action"] == "add":
             files[i["file"]]["raw"] += i["str"] + "\n"
 
-    # Write the files back
+       # Write the files back (only if content actually changed)
     for key, val in files.items():
-        mlog.log("Rewriting", mlog.yellow(key))
-        with open(val["path"], "w", encoding="utf-8") as fp:
-            fp.write(val["raw"])
+        # Read the current file content from disk
+        try:
+            with open(val["path"], "r", encoding="utf-8") as fp:
+                existing_content = fp.read()
+        except FileNotFoundError:
+            existing_content = None
+
+        # Only write to disk if the new content is different
+        if existing_content != val["raw"]:
+            mlog.log("Rewriting", mlog.yellow(key))
+            with open(val["path"], "w", encoding="utf-8") as fp:
+                fp.write(val["raw"])
+        else:
+            # Identical content - do absolutely nothing to keep Git clean
+            pass
 
 
 # Monkey patch the apply_changes method until https://github.com/mesonbuild/meson/pull/12899 is merged
