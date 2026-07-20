@@ -92,16 +92,38 @@ On some systems, optional packages can also be installed using your
 system's package manager:
 
 - **macOS** (Homebrew):
+
+  .. code-block:: shell
+
+      brew install <package_name>
+
+  To see the list of Homebrew packages available for SageMath:
+
+  .. code-block:: shell
+
+      cat build/pkgs/*/distros/homebrew.txt
+
+  Additional packages are available from Homebrew taps:
+
+  .. code-block:: shell
+
+      brew tap Macaulay2/homebrew-tap
+      brew tap dimpase/homebrew-tap
+
+  Then you can install packages from these taps:
+
   .. code-block:: shell
 
       brew install <package_name>
 
 - **Linux** (Debian/Ubuntu):
+
   .. code-block:: shell
 
       sudo apt install <package_name>
 
 - **Linux** (Fedora):
+
   .. code-block:: shell
 
       sudo dnf install <package_name>
