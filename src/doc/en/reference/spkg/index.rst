@@ -49,7 +49,7 @@ To see a list of all available optional packages:
 
 .. code-block:: shell
 
-    sage -list-packages optional
+    sage --list-packages optional
 
 Installation from Source
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,6 +65,49 @@ Or to install all optional packages:
 .. code-block:: shell
 
     ./configure --enable-optional-packages=all
+
+Pip-Installable Optional Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some optional SageMath packages can be installed using pip:
+
+.. code-block:: shell
+
+    ./sage -pip install <package_name>
+
+For example, to install the `graph-genus` package (which provides faster
+graph genus algorithms):
+
+.. code-block:: shell
+
+    ./sage -pip install graph-genus
+
+This method is particularly useful for Python packages that are not
+distributed as standard Sage packages.
+
+System Package Managers
+~~~~~~~~~~~~~~~~~~~~~~~
+
+On some systems, optional packages can also be installed using your
+system's package manager:
+
+- **macOS** (Homebrew):
+  .. code-block:: shell
+
+      brew install <package_name>
+
+- **Linux** (Debian/Ubuntu):
+  .. code-block:: shell
+
+      sudo apt install <package_name>
+
+- **Linux** (Fedora):
+  .. code-block:: shell
+
+      sudo dnf install <package_name>
+
+Check the :ref:`All External Packages <chapter-spkg>` section for
+specific package installation instructions for your system.
 
 Verifying Installation
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -157,4 +200,3 @@ All External Packages
    :maxdepth: 1
 
    index_alph
-   
