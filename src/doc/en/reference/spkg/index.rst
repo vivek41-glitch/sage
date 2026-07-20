@@ -22,6 +22,73 @@ optional packages.
 .. include:: index_optional.rst
 
 
+Installing Optional Packages
+----------------------------
+
+To install an optional package, you can use Sage's package management system.
+
+Basic Installation
+~~~~~~~~~~~~~~~~~~
+
+To install an optional package, use the following command from the Sage command line:
+
+.. code-block:: sage
+
+    sage -i <package_name>
+
+For example, to install the optional package `bliss`:
+
+.. code-block:: sage
+
+    sage -i bliss
+
+Using the Package List
+~~~~~~~~~~~~~~~~~~~~~~
+
+To see a list of all available optional packages:
+
+.. code-block:: shell
+
+    sage -list-packages optional
+
+Installation from Source
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+When installing from source, you can also install optional packages during the build process:
+
+.. code-block:: shell
+
+    ./configure --enable-optional-packages=<package1>,<package2>
+
+Or to install all optional packages:
+
+.. code-block:: shell
+
+    ./configure --enable-optional-packages=all
+
+Verifying Installation
+~~~~~~~~~~~~~~~~~~~~~~
+
+To verify that an optional package was installed correctly:
+
+.. code-block:: sage
+
+    import <package_name>
+
+For example:
+
+.. code-block:: sage
+
+    import bliss
+
+If no error is raised, the package was installed successfully.
+
+Note
+~~~~
+
+Some optional packages may have additional system dependencies. See 
+:ref:`All External Packages <chapter-spkg>` for more information.
+
 Features
 --------
 
@@ -90,4 +157,4 @@ All External Packages
    :maxdepth: 1
 
    index_alph
-
+   
