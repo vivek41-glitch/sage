@@ -49,7 +49,21 @@ To see a list of all available optional packages:
 
 .. code-block:: shell
 
-    sage --list-packages optional
+    sage -optional
+
+To list experimental packages instead:
+
+.. code-block:: shell
+
+    sage -experimental
+
+Alternatively, inside Sage you can use:
+
+.. code-block:: sage
+
+    from sage.misc.package import list_packages
+    list_packages(optional=True)   # Lists optional packages
+    list_packages(experimental=True)   # Lists experimental packages
 
 Installation from Source
 ~~~~~~~~~~~~~~~~~~~~~~~~
