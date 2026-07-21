@@ -85,68 +85,36 @@ graph genus algorithms):
 This method is particularly useful for Python packages that are not
 distributed as standard Sage packages.
 
-System Package Managers
-~~~~~~~~~~~~~~~~~~~~~~~
-
-On some systems, optional packages can also be installed using your
-system's package manager:
-
-- **macOS** (Homebrew):
-
-  .. code-block:: shell
-
-      brew install <package_name>
-
-  To see the list of Homebrew packages available for SageMath:
-
-  .. code-block:: shell
-
-      cat build/pkgs/*/distros/homebrew.txt
-
-  Additional packages are available from Homebrew taps:
-
-  .. code-block:: shell
-
-      brew tap Macaulay2/homebrew-tap
-      brew tap dimpase/homebrew-tap
-
-  Then you can install packages from these taps:
-
-  .. code-block:: shell
-
-      brew install <package_name>
-
-- **Linux** (Debian/Ubuntu):
-
-  .. code-block:: shell
-
-      sudo apt install <package_name>
-
-- **Linux** (Fedora):
-
-  .. code-block:: shell
-
-      sudo dnf install <package_name>
-
-Check the :ref:`All External Packages <chapter-spkg>` section for
-specific package installation instructions for your system.
-
 Verifying Installation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-To verify that an optional package was installed correctly:
+To verify that an optional package was installed correctly, you can check if
+Sage recognizes it:
 
 .. code-block:: sage
 
-    import <package_name>
+    import sage.features
 
-For example:
+    feature = sage.features.PackageFeature("package_name")
+    print(feature.is_present())
+
+For example, to check if `bliss` is installed:
 
 .. code-block:: sage
 
-    import bliss
+    import sage.features
 
-If no error is raised, the package was installed successfully.
+    feature = sage.features.PackageFeature("bliss")
+    print(feature.is_present())  # Returns True if bliss is installed
+
+Note that some packages may not have a Python module, and the Python module
+name (if it exists) may differ from the package name. The above method works
+for all optional packages.
+
+For instructions on installing optional packages using your system's
+package manager (Homebrew, apt, dnf, etc.), see the individual
+package pages linked below. Each package page includes the correct
+package names for your distribution.
 
 Note
 ~~~~
