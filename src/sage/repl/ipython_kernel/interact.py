@@ -131,7 +131,16 @@ class sage_interactive(interactive):
         for w in widgets:
             s += "\n  %s: %s" % (w._kwarg, w)
         return s
-
+    def update(self, *args, **kwargs):
+        """
+        Override update to force garbage collection after each call.
+        """
+        import gc
+        try:
+            super().update(*args, **kwargs)
+        finally:
+            gc.collect()
+            
     def signature(self):
         """
         Return the fixed signature of the interactive function (after
