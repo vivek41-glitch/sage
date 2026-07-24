@@ -116,7 +116,7 @@ Note
 ~~~~
 
 Some optional packages may have additional system dependencies. See 
-:ref:`All External Packages <chapter-spkg>` for more information.
+:ref:`All External Packages <spkg>` for more information.
 
 Features
 --------
