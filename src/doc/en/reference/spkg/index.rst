@@ -49,36 +49,33 @@ To see a list of all available optional packages:
 
 .. code-block:: shell
 
-    sage -optional
+    sage --optional
 
 To list experimental packages instead:
 
 .. code-block:: shell
 
-    sage -experimental
+    sage --experimental
 
 Alternatively, inside Sage you can use:
 
 .. code-block:: sage
 
     from sage.misc.package import list_packages
-    list_packages(optional=True)   # Lists optional packages
-    list_packages(experimental=True)   # Lists experimental packages
+    list_packages('optional')   # Lists optional packages
+    list_packages('experimental')   # Lists experimental packages
 
 Installation from Source
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-When installing from source, you can also install optional packages during the build process:
+When installing from source, you can enable specific optional packages
+during the build process.
+
+To see all available configure options:
 
 .. code-block:: shell
 
-    ./configure --enable-optional-packages=<package1>,<package2>
-
-Or to install all optional packages:
-
-.. code-block:: shell
-
-    ./configure --enable-optional-packages=all
+    ./configure --help
 
 Pip-Installable Optional Packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,28 +99,13 @@ distributed as standard Sage packages.
 Verifying Installation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-To verify that an optional package was installed correctly, you can check if
-Sage recognizes it:
+To verify that an optional package was installed correctly, you can check
+the list of installed packages:
 
 .. code-block:: sage
 
-    import sage.features
-
-    feature = sage.features.PackageFeature("package_name")
-    print(feature.is_present())
-
-For example, to check if `bliss` is installed:
-
-.. code-block:: sage
-
-    import sage.features
-
-    feature = sage.features.PackageFeature("bliss")
-    print(feature.is_present())  # Returns True if bliss is installed
-
-Note that some packages may not have a Python module, and the Python module
-name (if it exists) may differ from the package name. The above method works
-for all optional packages.
+    from sage.misc.package import list_packages
+    list_packages('optional')  # Shows installed optional packages
 
 For instructions on installing optional packages using your system's
 package manager (Homebrew, apt, dnf, etc.), see the individual
