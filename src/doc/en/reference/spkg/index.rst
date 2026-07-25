@@ -57,6 +57,10 @@ To list experimental packages instead:
 
     sage --experimental
 
+For more detailed information on listing packages, including how to list
+pip-installed packages, see the documentation for the
+:mod:`sage.misc.package` module.
+
 Alternatively, inside Sage you can use:
 
 .. code-block:: sage
