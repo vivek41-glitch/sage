@@ -1052,7 +1052,7 @@ class SingleFileBuilder(DocBuilder):
         from sage.env import DOT_SAGE
 
         self._options = options
-        
+
         self.lang = 'en'
         self.name = 'single_file'
         path = os.path.abspath(path)
