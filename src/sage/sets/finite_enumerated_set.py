@@ -407,15 +407,15 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
     def __le__(self, other):
         """
         Return whether ``self`` is a subset of ``other``.
-        
+
         This implements the ``<=`` operator for :class:`FiniteEnumeratedSet`.
-        
+
         EXAMPLES::
-        
+
             sage: A = FiniteEnumeratedSet([2, 3])
             sage: B = FiniteEnumeratedSet([1, 2, 3])
             sage: C = FiniteEnumeratedSet([4, 5])
-            
+
             sage: A <= B
             True
             sage: B <= A
@@ -424,9 +424,9 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             True
             sage: C <= B
             False
-            
+
         TESTS::
-        
+
             sage: A = FiniteEnumeratedSet([1, 2])
             sage: B = FiniteEnumeratedSet([1, 2])
             sage: A <= B
@@ -437,26 +437,26 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
         # Quick optimization: same object
         if self is other:
             return True
-            
+
         # Check if other is a FiniteEnumeratedSet
         if not isinstance(other, FiniteEnumeratedSet):
             return NotImplemented
-            
+
         # Check if every element of self is in other
         return all(x in other for x in self)
-    
+
     def __ge__(self, other):
         """
         Return whether ``self`` is a superset of ``other``.
-        
+
         This implements the ``>=`` operator for :class:`FiniteEnumeratedSet`.
-        
+
         EXAMPLES::
-        
+
             sage: A = FiniteEnumeratedSet([1, 2, 3])
             sage: B = FiniteEnumeratedSet([2, 3])
             sage: C = FiniteEnumeratedSet([4, 5])
-            
+
             sage: A >= B
             True
             sage: B >= A
@@ -467,26 +467,26 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
         # Quick optimization: same object
         if self is other:
             return True
-            
+
         # Check if other is a FiniteEnumeratedSet
         if not isinstance(other, FiniteEnumeratedSet):
             return NotImplemented
-            
+
         # Check if every element of other is in self
         return all(x in self for x in other)
-    
+
     def __lt__(self, other):
         """
         Return whether ``self`` is a proper subset of ``other``.
-        
+
         This implements the ``<`` operator for :class:`FiniteEnumeratedSet`.
-        
+
         EXAMPLES::
-        
+
             sage: A = FiniteEnumeratedSet([2, 3])
             sage: B = FiniteEnumeratedSet([1, 2, 3])
             sage: C = FiniteEnumeratedSet([2, 3])
-            
+
             sage: A < B
             True
             sage: B < A
@@ -497,19 +497,19 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             True
         """
         return self <= other and self != other
-    
+
     def __gt__(self, other):
         """
         Return whether ``self`` is a proper superset of ``other``.
-        
+
         This implements the ``>`` operator for :class:`FiniteEnumeratedSet`.
-        
+
         EXAMPLES::
-        
+
             sage: A = FiniteEnumeratedSet([1, 2, 3])
             sage: B = FiniteEnumeratedSet([2, 3])
             sage: C = FiniteEnumeratedSet([1, 2, 3])
-            
+
             sage: A > B
             True
             sage: B > A
