@@ -63,7 +63,7 @@ def sympy_integrator(expression, v, a=None, b=None):
     if isinstance(result, SympyRootSum):
         from sage.interfaces.sympy import _sympy_rootsum_to_sage
         return _sympy_rootsum_to_sage(result)
-    
+
     return result._sage_()
 
 def mma_free_integrator(expression, v, a=None, b=None):

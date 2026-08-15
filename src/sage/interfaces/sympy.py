@@ -1128,7 +1128,6 @@ def sympy_init():
     from sympy.polys.rootisolation import RealInterval, ComplexInterval
     from sympy.series.order import Order
     from sympy.matrices import ImmutableMatrix, ImmutableSparseMatrix, Matrix, SparseMatrix
-    from sympy import RootSum as SympyRootSum, Lambda as SympyLambda
 
     Float._sage_ = _sympysage_float
     Integer._sage_ = _sympysage_integer
@@ -1404,10 +1403,10 @@ def _sympy_rootsum_to_sage(sympy_root_sum):
     from sage.symbolic.rootsum import root_sum
     from sage.symbolic.ring import SR
     from sympy import symbols, preorder_traversal
-    
+
     poly = sympy_root_sum.poly
     func = sympy_root_sum.fun
-    
+
     try:
         sage_poly = poly._sage_()
     except ValueError as e:
@@ -1425,10 +1424,10 @@ def _sympy_rootsum_to_sage(sympy_root_sum):
                 raise
         else:
             raise
-    
+
     args = func.args
     expr = func.expr
-    
+
     try:
         sage_expr = expr._sage_()
     except ValueError as e:
@@ -1443,14 +1442,14 @@ def _sympy_rootsum_to_sage(sympy_root_sum):
             sage_expr = expr._sage_()
         else:
             raise
-    
+
     var_name = str(args[0])
     if var_name.startswith('_'):
         var_name = var_name.lstrip('_')
         if not var_name:
             var_name = 'r'
-    
+
     def summand(r):
         return sage_expr.subs({SR(var_name): r})
-    
+
     return root_sum(sage_poly, summand)

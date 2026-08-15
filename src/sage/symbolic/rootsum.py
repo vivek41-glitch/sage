@@ -8,6 +8,7 @@ EXAMPLES::
 
     sage: from sage.symbolic.rootsum import root_sum
     sage: var('x a')
+    (x, a)
     sage: P = x^3 + a*x + 1
     sage: rs = root_sum(P, lambda r: log(x - r)/(a + 3*r^2))
     sage: rs
@@ -42,7 +43,7 @@ class RootSumFunction(BuiltinFunction):
                 return SR(0)
         except Exception:
             pass
-        
+
         # Create the expression using parent
         expr = super().__call__(polynomial, **kwargs)
         # Store the summand and polynomial in a dictionary keyed by expression ID
@@ -65,7 +66,6 @@ class RootSumFunction(BuiltinFunction):
         Evaluate the RootSum if possible (for low-degree polynomials).
         """
         from sage.symbolic.ring import SR
-        from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
         # Get the data from the expression
         try:
@@ -120,7 +120,7 @@ class RootSumFunction(BuiltinFunction):
     def _derivative_(self, *args, **kwargs):
         """
         Differentiate a RootSum expression.
-        
+
         For now, returns 0 as a safe fallback.
         Proper derivative implementation is a TODO.
         """
@@ -137,15 +137,15 @@ class RootSumFunction(BuiltinFunction):
             expr = frame.f_locals.get('self')
             if expr is None:
                 return None
-                
+
             # Get data from expression
             data = self._get_data(expr)
             if data is None:
                 return None
-                
+
             poly = data.get('polynomial')
             summand = data.get('summand')
-            
+
             if poly is None or summand is None:
                 return None
 
@@ -166,15 +166,15 @@ class RootSumFunction(BuiltinFunction):
             expr = frame.f_locals.get('self')
             if expr is None:
                 return "\\operatorname{RootSum}"
-                
+
             # Get data from expression
             data = self._get_data(expr)
             if data is None:
                 return "\\operatorname{RootSum}"
-                
+
             poly = data.get('polynomial')
             summand = data.get('summand')
-            
+
             if poly is None or summand is None:
                 return "\\operatorname{RootSum}"
 
