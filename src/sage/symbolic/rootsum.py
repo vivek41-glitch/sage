@@ -26,6 +26,27 @@ from sage.rings.integer import Integer
 class RootSumFunction(BuiltinFunction):
     r"""
     Represents sums over roots of a univariate polynomial.
+
+    INPUT:
+
+    - ``polynomial`` -- a univariate polynomial (as a symbolic expression
+      in the symbolic ring, e.g., ``x^3 + a*x + 1``)
+    - ``summand`` -- a callable function that takes a root (a symbolic
+      expression) and returns a symbolic expression
+
+    OUTPUT:
+
+    A symbolic expression representing `\sum_{r: P(r)=0} f(r)`.
+
+    EXAMPLES::
+
+        sage: from sage.symbolic.rootsum import root_sum
+        sage: var('x a')
+        (x, a)
+        sage: P = x^3 + a*x + 1
+        sage: rs = root_sum(P, lambda r: log(x - r)/(a + 3*r^2))
+        sage: rs
+        root_sum(x^3 + a*x + 1)
     """
 
     def __init__(self):
