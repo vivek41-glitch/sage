@@ -7599,4 +7599,13 @@ REFERENCES:
             Lett. Math. Phys. **73** (2005), pp. 165-181.
             :arxiv:`math/0509651`, :doi:`10.1007/s11005-005-0015-9`
 
+.. [FIPS203] National Institute of Standards and Technology,
+   "Module-Lattice-Based Key-Encapsulation Mechanism Standard",
+   FIPS 203, 2024.
+   https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf
+
+.. [Sch22] Peter Schwabe et al.,
+   "CRYSTALS-KYBER",
+   https://eprint.iacr.org/2022/1696
+
 .. include:: ../footer.txt
