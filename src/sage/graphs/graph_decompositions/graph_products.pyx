@@ -120,7 +120,6 @@ Methods
 """
 
 # ****************************************************************************
-
 #       Copyright (C) 2012 Nathann Cohen <nathann.cohen@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -130,11 +129,6 @@ Methods
 #                  https://www.gnu.org/licenses/
 # ****************************************************************************
 
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
 def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None):
     r"""
     Test whether the graph is a Cartesian product.
