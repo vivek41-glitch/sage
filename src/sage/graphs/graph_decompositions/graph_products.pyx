@@ -364,14 +364,12 @@ def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None)
         raise ValueError("something weird happened during the algorithm... "
                          "Please report the bug and give us the graph instance"
                          " that made it fail !")
+    OP_dealloc(op)
     if relabeling:
-        OP_dealloc(op)
         return isiso, dictt
     if certificate:
-        OP_dealloc(op)
         return factors
 
-    OP_dealloc(op)
     return True
 
 
