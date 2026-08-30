@@ -119,47 +119,9 @@ Methods
 -------
 """
 
-
-from libc.stdlib cimport malloc, free
-
-cdef struct CUnionFind:
-    int* parent
-    int* rank
-    int n
-    int components
-
-cdef void uf_init(CUnionFind* uf, int n):
-    uf.n = n
-    uf.components = n
-    uf.parent = <int*>malloc(n * sizeof(int))
-    uf.rank = <int*>malloc(n * sizeof(int))
-    cdef int i
-    for i in range(n):
-        uf.parent[i] = i
-        uf.rank[i] = 0
-
-cdef int uf_find(CUnionFind* uf, int x):
-    if uf.parent[x] != x:
-        uf.parent[x] = uf_find(uf, uf.parent[x])
-    return uf.parent[x]
-
-cdef void uf_union(CUnionFind* uf, int x, int y):
-    cdef int rx = uf_find(uf, x)
-    cdef int ry = uf_find(uf, y)
-    if rx == ry:
-        return
-    if uf.rank[rx] < uf.rank[ry]:
-        uf.parent[rx] = ry
-    elif uf.rank[rx] > uf.rank[ry]:
-        uf.parent[ry] = rx
-    else:
-        uf.parent[ry] = rx
-        uf.rank[rx] += 1
-    uf.components -= 1
-
-cdef void uf_free(CUnionFind* uf):
-    free(uf.parent)
-    free(uf.rank)
+from sage.groups.perm_gps.partn_ref.data_structures cimport (
+    OrbitPartition, OP_new, OP_join, OP_find, OP_dealloc
+)
 
 # ****************************************************************************
 #       Copyright (C) 2012 Nathann Cohen <nathann.cohen@gmail.com>
@@ -172,8 +134,6 @@ cdef void uf_free(CUnionFind* uf):
 # ****************************************************************************
 
 def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None):
-    from sage.graphs.graph import Graph
-    cdef CUnionFind uf
     r"""
     Test whether the graph is a Cartesian product.
 
@@ -289,10 +249,9 @@ def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None)
 
     # Of course the number of vertices of g cannot be prime !
     if g.order() <= 3 or Integer(g.order()).is_prime():
-        uf_free(&uf)
         return (False, None) if relabeling else False
 
-        from sage.graphs.graph import Graph
+    from sage.graphs.graph import Graph
 
     # As we need the vertices of g to be linearly ordered, we copy the graph and
     # relabel it
@@ -308,14 +267,13 @@ def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None)
     cdef set un, intersect
 
     # The equivalence classes of the edges of g
-    # Initialize with all edges of the graph
+    # Initialize OrbitPartition with all edges
     cdef list edge_list = list(g_int.edge_iterator(labels=False))
     cdef int n_edges = len(edge_list)
-    uf_init(&uf, n_edges)
-    cdef dict edge_to_idx = {}
-    for i, (u, v) in enumerate(edge_list):
-        edge_to_idx[(u, v)] = i
-        edge_to_idx[(v, u)] = i
+    cdef dict edge_to_idx = {r(u, v): i for i, (u, v) in enumerate(edge_list)}
+    cdef OrbitPartition *op = OP_new(n_edges)
+    if op == NULL:
+        raise MemoryError("Failed to allocate OrbitPartition")
 
     # For all pairs of vertices u,v of G, according to their number of common
     # neighbors... See the module's documentation !
@@ -344,12 +302,12 @@ def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None)
             # Special case: uv is not an edge and exactly 2 common neighbors
             if len(intersect) == 2 and not g_int.has_edge(u, v):
                 x, y = intersect
-                uf_union(&uf, edge_to_idx[(u, x)], edge_to_idx[(v, y)])
-                uf_union(&uf, edge_to_idx[(v, x)], edge_to_idx[(u, y)])
+                OP_join(op, edge_to_idx[r(u, x)], edge_to_idx[r(v, y)])
+                OP_join(op, edge_to_idx[r(v, x)], edge_to_idx[r(u, y)])
             # All other cases: union with all common neighbors
             else:
                 for x in intersect:
-                    uf_union(&uf, edge_to_idx[(u, x)], edge_to_idx[(v, x)])
+                    OP_join(op, edge_to_idx[r(u, x)], edge_to_idx[r(v, x)])
 
     # Edges uv and u'v' such that d(u,u')+d(v,v') != d(u,v')+d(v,u') are also
     # equivalent
@@ -364,17 +322,17 @@ def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None)
         for j in range(i + 1, g_int.size()):
             uu, vv = edges[j]
             if du[uu] + dv[vv] != du[vv] + dv[uu]:
-                uf_union(&uf, edge_to_idx[(u, v)], edge_to_idx[(uu, vv)])
+                OP_join(op, edge_to_idx[r(u, v)], edge_to_idx[r(uu, vv)])
 
     # Only one connected component ? Check before building edges
-    if uf.components == 1:
-        uf_free(&uf)
+    if op.num_cells == 1:
+        OP_dealloc(op)
         return (False, None) if relabeling else False
 
     # Gathering the connected components, relabeling the vertices on-the-fly
     cdef dict comp_map = {}
     for i in range(n_edges):
-        root = uf_find(&uf, i)
+        root = OP_find(op, i)
         if root not in comp_map:
             comp_map[root] = []
         comp_map[root].append(edge_list[i])
@@ -407,12 +365,15 @@ def is_cartesian_product(g, certificate=False, relabeling=False, immutable=None)
                          "Please report the bug and give us the graph instance"
                          " that made it fail !")
     if relabeling:
+        OP_dealloc(op)
         return isiso, dictt
     if certificate:
+        OP_dealloc(op)
         return factors
 
-    uf_free(&uf)
+    OP_dealloc(op)
     return True
+
 
 def rooted_product(G, H, root=None, immutable=None):
     r"""
