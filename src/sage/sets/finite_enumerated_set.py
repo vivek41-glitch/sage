@@ -425,6 +425,13 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             sage: C <= B
             False
 
+            sage: A = FiniteEnumeratedSet([1, 2])
+            sage: B = FiniteEnumeratedSet([2, 1])
+            sage: A <= B  # Same elements, different order
+            True
+            sage: B <= A
+            True
+
         TESTS::
 
             sage: A = FiniteEnumeratedSet([1, 2])
@@ -433,6 +440,11 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             True
             sage: B <= A
             True
+
+            sage: A <= 5  # Unsupported type
+            Traceback (most recent call last):
+            ...
+            TypeError: unsupported operand parent(s) for ...
         """
         # Quick optimization: same object
         if self is other:
@@ -442,8 +454,13 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
         if not isinstance(other, FiniteEnumeratedSet):
             return NotImplemented
 
-        # Check if every element of self is in other
-        return all(x in other for x in self)
+        # Fast path: use hash-based set for O(n) performance
+        try:
+            other_set = set(other._elements)
+            return all(x in other_set for x in self._elements)
+        except TypeError:
+            # Fallback: linear scan for unhashable elements
+            return all(x in other._elements for x in self._elements)
 
     def __ge__(self, other):
         """
@@ -463,6 +480,13 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             False
             sage: A >= A
             True
+
+            sage: A = FiniteEnumeratedSet([1, 2])
+            sage: B = FiniteEnumeratedSet([2, 1])
+            sage: A >= B  # Same elements, different order
+            True
+            sage: B >= A
+            True
         """
         # Quick optimization: same object
         if self is other:
@@ -472,14 +496,22 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
         if not isinstance(other, FiniteEnumeratedSet):
             return NotImplemented
 
-        # Check if every element of other is in self
-        return all(x in self for x in other)
+        # Fast path: use hash-based set for O(n) performance
+        try:
+            self_set = set(self._elements)
+            return all(x in self_set for x in other._elements)
+        except TypeError:
+            # Fallback: linear scan for unhashable elements
+            return all(x in self._elements for x in other._elements)
 
     def __lt__(self, other):
         """
         Return whether ``self`` is a proper subset of ``other``.
 
         This implements the ``<`` operator for :class:`FiniteEnumeratedSet`.
+
+        A proper subset means all elements of self are in other, and
+        there is at least one element in other not in self.
 
         EXAMPLES::
 
@@ -495,14 +527,36 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             False
             sage: FiniteEnumeratedSet([]) < A
             True
+
+            sage: A = FiniteEnumeratedSet([1, 2])
+            sage: B = FiniteEnumeratedSet([2, 1])
+            sage: A < B  # Same elements, different order -> False
+            False
+            sage: B < A
+            False
+
+        TESTS::
+
+            sage: A < 5  # Unsupported type
+            Traceback (most recent call last):
+            ...
+            TypeError: unsupported operand parent(s) for ...
         """
-        return self <= other and self != other
+        # Check if other is a FiniteEnumeratedSet
+        if not isinstance(other, FiniteEnumeratedSet):
+            return NotImplemented
+
+        # Proper subset: self is a subset of other, but not equal (by set semantics)
+        return self <= other and not (other <= self)
 
     def __gt__(self, other):
         """
         Return whether ``self`` is a proper superset of ``other``.
 
         This implements the ``>`` operator for :class:`FiniteEnumeratedSet`.
+
+        A proper superset means all elements of other are in self, and
+        there is at least one element in self not in other.
 
         EXAMPLES::
 
@@ -518,5 +572,24 @@ class FiniteEnumeratedSet(UniqueRepresentation, Parent):
             False
             sage: A > FiniteEnumeratedSet([])
             True
+
+            sage: A = FiniteEnumeratedSet([1, 2])
+            sage: B = FiniteEnumeratedSet([2, 1])
+            sage: A > B  # Same elements, different order -> False
+            False
+            sage: B > A
+            False
+
+        TESTS::
+
+            sage: A > 5  # Unsupported type
+            Traceback (most recent call last):
+            ...
+            TypeError: unsupported operand parent(s) for ...
         """
-        return self >= other and self != other
+        # Check if other is a FiniteEnumeratedSet
+        if not isinstance(other, FiniteEnumeratedSet):
+            return NotImplemented
+
+        # Proper superset: self is a superset of other, but not equal (by set semantics)
+        return self >= other and not (self <= other)
