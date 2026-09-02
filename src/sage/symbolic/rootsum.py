@@ -142,11 +142,12 @@ class RootSumFunction(BuiltinFunction):
         """
         Differentiate a RootSum expression.
 
-        For now, returns 0 as a safe fallback.
-        Proper derivative implementation is a TODO.
+        Mathematically:
+        d/dx Σ_{r: P(r)=0} f(r, x) = Σ_{r: P(r)=0} ∂f/∂x (r, x)
+
+        This is not yet implemented.
         """
-        from sage.symbolic.ring import SR
-        return SR(0)
+        raise NotImplementedError("derivative of RootSum is not yet implemented")
 
     def _sympy_(self):
         """Convert to SymPy's RootSum."""
