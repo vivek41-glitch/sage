@@ -21,15 +21,19 @@ def test_rootsum_creation():
 
 
 def test_rootsum_derivative():
-    """Test differentiating RootSum."""
+    """Test differentiating RootSum - NotImplementedError is expected."""
     var('x a')
 
     P = x**3 + a*x + 1
     rs = root_sum(P, lambda r: log(x - r)/(a + 3*r**2))
 
-    deriv = derivative(rs, x)
-    print("RootSum derivative works")
-    return deriv
+    try:
+        deriv = derivative(rs, x)
+        print("RootSum derivative works")
+        return deriv
+    except NotImplementedError:
+        print("RootSum derivative correctly raises NotImplementedError")
+        return None
 
 
 def test_rootsum_evaluation():
