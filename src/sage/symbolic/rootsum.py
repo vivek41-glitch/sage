@@ -2,7 +2,7 @@
 RootSum - Sum over roots of a polynomial
 
 This module provides support for expressions of the form:
-    sum_{r: P(r)=0} f(r)
+    sum_{r: P(r)=0} f(r, x)
 
 EXAMPLES::
 
@@ -10,7 +10,7 @@ EXAMPLES::
     sage: var('x a')
     (x, a)
     sage: P = x^3 + a*x + 1
-    sage: rs = root_sum(P, lambda r: log(x - r)/(a + 3*r^2))
+    sage: rs = root_sum(P, lambda r, x: log(x - r)/(a + 3*r^2))
     sage: rs
     root_sum(x^3 + a*x + 1)
 """
@@ -27,16 +27,29 @@ class RootSumFunction(BuiltinFunction):
     r"""
     Represents sums over roots of a univariate polynomial.
 
+    Mathematically, a RootSum represents:
+
+        F(x) = \sum_{r : P(r)=0} f(r, x)
+
+    where `P` is a univariate polynomial and `f` is a function of
+    the root `r` and the variable `x`.
+
     INPUT:
 
     - ``polynomial`` -- a univariate polynomial (as a symbolic expression
       in the symbolic ring, e.g., ``x^3 + a*x + 1``)
-    - ``summand`` -- a callable function that takes a root (a symbolic
-      expression) and returns a symbolic expression
+    - ``summand`` -- a callable function that takes two arguments:
+      the root `r` and the variable `x`
+      (e.g., ``lambda r, x: log(x - r)/(a + 3*r^2)``)
+      and returns a symbolic expression
 
     OUTPUT:
 
-    A symbolic expression representing `\sum_{r: P(r)=0} f(r)`.
+    A symbolic expression representing `\sum_{r: P(r)=0} f(r, x)`.
+
+    The derivative (not yet implemented) would be:
+
+        F'(x) = \sum_{r : P(r)=0} \partial f/\partial x (r, x)
 
     EXAMPLES::
 
@@ -44,7 +57,7 @@ class RootSumFunction(BuiltinFunction):
         sage: var('x a')
         (x, a)
         sage: P = x^3 + a*x + 1
-        sage: rs = root_sum(P, lambda r: log(x - r)/(a + 3*r^2))
+        sage: rs = root_sum(P, lambda r, x: log(x - r)/(a + 3*r^2))
         sage: rs
         root_sum(x^3 + a*x + 1)
     """
@@ -143,7 +156,7 @@ class RootSumFunction(BuiltinFunction):
         Differentiate a RootSum expression.
 
         Mathematically:
-        d/dx Σ_{r: P(r)=0} f(r, x) = Σ_{r: P(r)=0} ∂f/∂x (r, x)
+        F'(x) = Σ_{r : P(r)=0} ∂f/∂x (r, x)
 
         This is not yet implemented.
         """
