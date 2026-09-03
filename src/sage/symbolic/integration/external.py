@@ -50,6 +50,12 @@ def maxima_integrator(expression, v, a=None, b=None):
 def sympy_integrator(expression, v, a=None, b=None):
     """
     Integration using SymPy.
+
+    EXAMPLES::
+
+        sage: from sage.symbolic.integration.external import sympy_integrator
+        sage: sympy_integrator(sin(x), x)                                               # needs sympy
+        -cos(x)
     """
     import sympy
     ex = expression._sympy_()
