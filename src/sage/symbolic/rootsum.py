@@ -95,6 +95,33 @@ class RootSumFunction(BuiltinFunction):
             return self._data.get(id(expr))
         return None
 
+    def summand(self, expr):
+        """
+        Return the summand function of the RootSum expression.
+
+        INPUT:
+
+        - ``expr`` -- a RootSum expression
+
+        OUTPUT:
+
+        The summand function `f(r, x)` that was used to create the RootSum.
+
+        EXAMPLES::
+
+            sage: from sage.symbolic.rootsum import root_sum
+            sage: var('x a')
+            (x, a)
+            sage: P = x^3 + a*x + 1
+            sage: rs = root_sum(P, lambda r, x: log(x - r)/(a + 3*r^2))
+            sage: root_sum.summand(rs)
+            <function ...>
+        """
+        data = self._get_data(expr)
+        if data is not None:
+            return data.get('summand')
+        return None
+
     def _eval_(self, polynomial):
         """
         Evaluate the RootSum if possible (for low-degree polynomials).
