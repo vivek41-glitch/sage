@@ -13,6 +13,13 @@ EXAMPLES::
     sage: rs = root_sum(P, lambda r, x: log(x - r)/(a + 3*r^2))
     sage: rs
     root_sum(x^3 + a*x + 1)
+
+Numerical evaluation::
+
+    sage: P = x^5 + x + 1
+    sage: rs = root_sum(P, lambda r: 1/(5*r^4 + 1))
+    sage: rs.n()
+    -0.443...
 """
 
 # Import required Sage modules
@@ -60,6 +67,13 @@ class RootSumFunction(BuiltinFunction):
         sage: rs = root_sum(P, lambda r, x: log(x - r)/(a + 3*r^2))
         sage: rs
         root_sum(x^3 + a*x + 1)
+
+    Numerical evaluation::
+
+        sage: P = x^5 + x + 1
+        sage: rs = root_sum(P, lambda r: 1/(5*r^4 + 1))
+        sage: rs.n()
+        -0.443...
     """
 
     def __init__(self):
